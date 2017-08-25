@@ -1,0 +1,28 @@
+{
+  "name": "rot.js",
+  "private": true,
+  "version": "1.0.0",
+  "description": "rot.js ======",
+  "main": "rot.js",
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FaviusTy/rot.js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/FaviusTy/rot.js/issues"
+  },
+  "homepage": "https://github.com/FaviusTy/rot.js#readme",
+  "devDependencies": {
+    "@std/esm": "0.5.1"
+  }
+}
