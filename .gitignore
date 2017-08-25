@@ -1,7 +1,6 @@
 /coverage
 /lib
 /node_modules
-/package.json
 /test
 
 # exclude idea based editors
