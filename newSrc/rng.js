@@ -138,3 +138,5 @@ class RNG {
     return clone
   }
 }
+
+export default new RNG()
