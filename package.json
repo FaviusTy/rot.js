@@ -33,6 +33,6 @@
   },
   "scripts": {
     "fixpack": "fixpack",
-    "test": "eater --dir newSrc/test --require @std/esm --reporter eater-pacman-reporter"
+    "test": "eater --glob newSrc/**/test/**/*.js --require @std/esm"
   }
 }
