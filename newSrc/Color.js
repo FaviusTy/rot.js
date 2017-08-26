@@ -388,4 +388,6 @@ class Color {
   }
 }
 
-export default new Color()
+const singleton = new Color()
+export default singleton
+

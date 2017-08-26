@@ -1,28 +1,35 @@
 {
   "name": "rot.js",
-  "private": true,
-  "version": "1.0.0",
   "description": "rot.js ======",
-  "main": "rot.js",
+  "version": "1.0.0",
+  "@std/esm": {
+    "esm": "all"
+  },
+  "bugs": {
+    "url": "https://github.com/FaviusTy/rot.js/issues"
+  },
+  "devDependencies": {
+    "@std/esm": "0.5.1",
+    "eater": "^3.2.0",
+    "espower-loader": "^1.2.2",
+    "fixpack": "2.3.1",
+    "power-assert": "^1.4.4"
+  },
   "directories": {
     "doc": "doc",
     "test": "tests"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "homepage": "https://github.com/FaviusTy/rot.js#readme",
+  "keywords": [],
+  "license": "WTFPL",
+  "main": "rot.js",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FaviusTy/rot.js.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "WTFPL",
-  "bugs": {
-    "url": "https://github.com/FaviusTy/rot.js/issues"
-  },
-  "homepage": "https://github.com/FaviusTy/rot.js#readme",
-  "devDependencies": {
-    "@std/esm": "0.5.1"
+  "scripts": {
+    "fixpack": "fixpack",
+    "test": "eater --dir newSrc/test --require newSrc/power-esa"
   }
 }
