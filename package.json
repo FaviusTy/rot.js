@@ -3,7 +3,8 @@
   "description": "rot.js ======",
   "version": "1.0.0",
   "@std/esm": {
-    "esm": "all"
+    "esm": "all",
+    "cjs": true
   },
   "bugs": {
     "url": "https://github.com/FaviusTy/rot.js/issues"
@@ -30,6 +31,6 @@
   },
   "scripts": {
     "fixpack": "fixpack",
-    "test": "eater --dir newSrc/test --require newSrc/power-esa"
+    "test": "eater --dir newSrc/test --require @std/esm"
   }
 }

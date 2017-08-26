@@ -236,7 +236,7 @@ class Color {
     return num
   }
 
-  _cache() {
+  get _cache() {
     return {
       "black": [0, 0, 0],
       "navy": [0, 0, 128],
