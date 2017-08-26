@@ -14,7 +14,8 @@
     "eater": "^3.2.0",
     "espower-loader": "^1.2.2",
     "fixpack": "2.3.1",
-    "power-assert": "^1.4.4"
+    "power-assert": "^1.4.4",
+    "ramda": "^0.24.1"
   },
   "directories": {
     "doc": "doc",

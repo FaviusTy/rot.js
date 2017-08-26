@@ -138,5 +138,5 @@ class RNG {
     return clone
   }
 }
-
-export default new RNG()
+const instance = new RNG()
+export default instance
