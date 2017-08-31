@@ -12,7 +12,7 @@ const TYPE_BG =		3
  * @namespace
  * Contains text tokenization and breaking routines
  */
-class Text{
+export default class Text{
 
   /**
    * Measure size of a resulting text block
