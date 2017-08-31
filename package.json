@@ -6,6 +6,13 @@
     "esm": "all",
     "cjs": true
   },
+  "eater": {
+    "dir": "newSrc/test",
+    "require": [
+      "./enable-power-assert",
+      "@std/esm"
+    ]
+  },
   "bugs": {
     "url": "https://github.com/FaviusTy/rot.js/issues"
   },
@@ -33,6 +40,6 @@
   },
   "scripts": {
     "fixpack": "fixpack",
-    "test": "eater --glob newSrc/**/test/**/*.js --require @std/esm"
+    "test": "eater"
   }
 }
