@@ -1,7 +1,7 @@
 /**
  * @class Generic event queue: stores events and retrieves them based on their time
  */
-class EventQueue {
+export default class EventQueue {
   constructor() {
     this._time = 0
     this._events = []
