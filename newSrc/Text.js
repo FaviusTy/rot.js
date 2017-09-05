@@ -2,10 +2,10 @@
 const RE_COLORS = /%([bc]){([^}]*)}/g
 
 /* token types */
-const TYPE_TEXT =		0
-const TYPE_NEWLINE =	1
-const TYPE_FG =		2
-const TYPE_BG =		3
+export const TYPE_TEXT =		0
+export const TYPE_NEWLINE =	1
+export const TYPE_FG =		2
+export const TYPE_BG =		3
 
 
 /**
@@ -17,7 +17,7 @@ export default class Text{
   /**
    * Measure size of a resulting text block
    */
-  measure(str, maxWidth) {
+  static measure(str, maxWidth) {
     const result = {width:0, height:1}
     const tokens = this.tokenize(str, maxWidth)
     let lineWidth = 0
@@ -43,7 +43,7 @@ export default class Text{
   /**
    * Convert string to a series of a formatting commands
    */
-  tokenize(str, maxWidth) {
+  static tokenize(str, maxWidth) {
     const result = []
 
     /* first tokenization pass - split texts and color formatting commands */
@@ -81,7 +81,7 @@ export default class Text{
   }
 
   /* insert line breaks into first-pass tokenized data */
-  _breakLines(tokens, maxWidth) {
+  static _breakLines(tokens, maxWidth) {
     if (!maxWidth) maxWidth = Infinity
 
     let i = 0
@@ -189,7 +189,7 @@ export default class Text{
    * @param {bool} removeBreakChar Do we want to remove the breaking character?
    * @returns {string} remaining unbroken token value
    */
-  _breakInsideToken(tokens, tokenIndex, breakIndex, removeBreakChar) {
+  static _breakInsideToken(tokens, tokenIndex, breakIndex, removeBreakChar) {
     const newBreakToken = {
       type: TYPE_NEWLINE
     }
