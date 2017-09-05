@@ -61,8 +61,8 @@ export default class FOV {
     let y = cy + startOffset[1] * r
 
     /* circle */
-    for (const i=0;i<dirs.length;i++) {
-      for (const j=0;j<r*countFactor;j++) {
+    for (let i=0;i<dirs.length;i++) {
+      for (let j=0;j<r*countFactor;j++) {
         result.push([x, y])
         x += dirs[i][0]
         y += dirs[i][1]
