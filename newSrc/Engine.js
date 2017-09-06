@@ -2,7 +2,7 @@
  * @class Asynchronous main loop
  * @param {ROT.Scheduler} scheduler
  */
-class Engine {
+export default class Engine {
   constructor(scheduler) {
     this._scheduler = scheduler
     this._lock = 1
@@ -26,7 +26,7 @@ class Engine {
   /**
    * Resume execution (paused by a previous lock)
    */
-  unlock = function () {
+  unlock() {
     if (!this._lock) throw new Error("Cannot unlock unlocked engine")
     this._lock--
 
