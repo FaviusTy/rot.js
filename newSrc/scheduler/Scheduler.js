@@ -1,4 +1,4 @@
-import '../EventQueue'
+import EventQueue from  '../EventQueue'
 
 /**
  * @class Abstract scheduler
