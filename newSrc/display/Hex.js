@@ -1,3 +1,4 @@
+import mod from '../utils/mod'
 import Backend from './Backend'
 
 /**
@@ -114,7 +115,7 @@ export default class Hex extends Backend {
     var size = nodeSize / this._options.height
     y = Math.floor(y/size)
 
-    if (y.mod(2)) { /* odd row */
+    if (mod(y)(2)) { /* odd row */
       x -= this._spacingX
       x = 1 + 2*Math.floor(x/(2*this._spacingX))
     }

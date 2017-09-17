@@ -1,3 +1,5 @@
+import mod from '../utils/mod'
+
 /**
  * A simple 2d implementation of simplex noise by Ondrej Zara
  *
@@ -79,8 +81,8 @@ export default class Simplex {
     var y2 = y0 - 1 + 2*G2
 
     // Work out the hashed gradient indices of the three simplex corners
-    var ii = i.mod(count)
-    var jj = j.mod(count)
+    var ii = mod(i)(count)
+    var jj = mod(j)(count)
 
     // Calculate the contribution from the three corners
     var t0 = 0.5 - x0*x0 - y0*y0
