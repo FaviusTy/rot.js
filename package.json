@@ -42,6 +42,7 @@
   "scripts": {
     "fixpack": "fixpack",
     "mcheck": "npm-check",
+    "repl": "node -r @std/esm",
     "test": "eater"
   }
 }
