@@ -1,4 +1,5 @@
 import pick from '../utils/pick'
+import shuffle from '../utils/shuffle'
 
 import Dungeon from './Dungeon'
 import Room from './features/Room'
@@ -109,7 +110,7 @@ export default class Uniform extends Dungeon {
         room.create(this._digCallback)
       }
 
-      this._unconnected = this._rooms.slice().randomize()
+      this._unconnected = shuffle(this._rooms.slice())
       this._connected = []
       if (this._unconnected.length) this._connected.push(this._unconnected.pop()) /* first one is always connected */
 

@@ -1,4 +1,5 @@
 import mod from '../utils/mod'
+import shuffle from '../utils/shuffle'
 
 /**
  * A simple 2d implementation of simplex noise by Ondrej Zara
@@ -31,7 +32,7 @@ export default class Simplex {
     var permutations = []
     var count = gradients || 256
     for (var i=0;i<count;i++) permutations.push(i)
-    permutations = permutations.randomize()
+    permutations = shuffle(permutations)
 
     this._perms = []
     this._indexes = []

@@ -1,5 +1,6 @@
 import DIRS from '../constants/DIRS'
 import RNG from '../rng'
+import shuffle from '../utils/shuffle'
 import Map from './Map'
 
 /**
@@ -96,7 +97,7 @@ export default class Rogue extends Map {
 
       //var dirToCheck = [0, 1, 2, 3, 4, 5, 6, 7];
       var dirToCheck = [0, 2, 4, 6]
-      dirToCheck = dirToCheck.randomize()
+      dirToCheck = shuffle(dirToCheck)
 
       do {
         found = false
@@ -140,7 +141,7 @@ export default class Rogue extends Map {
     var cw = this._options.cellWidth
     var ch = this._options.cellHeight
 
-    this.connectedCells = this.connectedCells.randomize()
+    this.connectedCells = shuffle(this.connectedCells)
     var room
     var otherRoom
     var validRoom
@@ -152,7 +153,7 @@ export default class Rogue extends Map {
 
         if (room["connections"].length === 0) {
           var directions = [0, 2, 4, 6]
-          directions = directions.randomize()
+          directions = shuffle(directions)
 
           validRoom = false
 
