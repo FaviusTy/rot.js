@@ -14,7 +14,7 @@ export default class Scheduler {
    * @see ROT.EventQueue#getTime
    */
   getTime() {
-    return this._queue.getTime()
+    return this._queue.time
   }
 
   /**

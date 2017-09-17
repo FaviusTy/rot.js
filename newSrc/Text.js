@@ -72,7 +72,7 @@ export default class Text{
     const part = str.substring(offset);
     if (part.length) {
       result.push({
-        type: ROT.Text.TYPE_TEXT,
+        type: TYPE_TEXT,
         value: part
       });
     }

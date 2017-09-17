@@ -9,8 +9,11 @@
   "bugs": {
     "url": "https://github.com/FaviusTy/rot.js/issues"
   },
+  "dependencies": {
+    "@immutable-array/prototype": "1.0.2"
+  },
   "devDependencies": {
-    "@std/esm": "^0.7.1",
+    "@std/esm": "^0.10.0",
     "eater": "3.2.0",
     "eater-b-reporter": "^0.2.0",
     "eater-pacman-reporter": "0.1.1",
@@ -46,8 +49,5 @@
     "mcheck": "npm-check",
     "repl": "node -r @std/esm",
     "test": "eater"
-  },
-  "dependencies": {
-    "@immutable-array/prototype": "1.0.2"
   }
 }
