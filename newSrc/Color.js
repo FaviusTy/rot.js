@@ -1,3 +1,5 @@
+import {shift} from '@immutable-array/prototype'
+import range from './utils/range'
 import lpad from './utils/lpad'
 import RNG from './rng'
 
@@ -6,100 +8,86 @@ import RNG from './rng'
  */
 class Color {
   fromString(str) {
-    let cached, r
-    if (str in this._cache) {
-      cached = this._cache[str];
-    }
-    else {
-      if (str.charAt(0) === '#') { /* hex rgb */
-        const values = str.match(/[0-9a-f]/gi).map((x) => parseInt(x, 16))
-        if (values.length === 3) {
-          cached = values.map((x) => x * 17)
-        }
-        else {
-          for (var i=0; i<3; i++) {
-            values[i+1] += 16*values[i];
-            values.splice(i, 1);
-          }
-          cached = values
-        }
+    if (str in this._cache) return this._cache[str].slice();
 
+    let cached
+
+    if (str.charAt(0) === '#') { /* hex rgb */
+      const values = str.match(/[0-9a-f]/gi).map((x) => parseInt(x, 16))
+      if (values.length === 3) {
+        cached = values.map((x) => x * 17)
       }
-      else if ((r = str.match(/rgb\(([0-9, ]+)\)/i))) { /* decimal rgb */
-        cached = r[1].split(/\s*,\s*/).map((x) => parseInt(x))
-      }
-      else { /* html name */
-        cached = [0, 0, 0]
+      else {
+        range(3).forEach((i) => {
+          values[i + 1] += 16 * values[i];
+          values.splice(i, 1);
+        })
+        cached = values
       }
 
-      this._cache[str] = cached
     }
+    else if (str.match(/rgb\(([0-9, ]+)\)/i)) { /* decimal rgb */
+      const rgb = str.match(/rgb\(([0-9, ]+)\)/i)
+      cached = rgb[1].split(/\s*,\s*/).map((x) => parseInt(x))
+    }
+    else { /* html name */
+      cached = [0, 0, 0]
+    }
+
+    this._cache[str] = cached
 
     return cached.slice()
   }
 
   /**
    * Add two or more colors
-   * @param {number[]} color1
-   * @param {number[]} color2
+   * @param {number[]} baseColor
    * @returns {number[]}
    */
-  add(color1, color2) {
-    const result = color1.slice()
-    for (var i=0;i<3;i++) {
-      for (var j=1;j<arguments.length;j++) {
-        result[i] += arguments[j][i]
-      }
-    }
-    return result
+  add(baseColor) {
+    return Color.add(baseColor.slice(), shift(Object.values(arguments)))
   }
 
   /**
    * Add two or more colors, MODIFIES FIRST ARGUMENT
-   * @param {number[]} color1
-   * @param {number[]} color2
+   * @param {number[]} baseColor
    * @returns {number[]}
    */
-  add_(color1, color2) {
-    for (var i=0;i<3;i++) {
-      for (var j=1;j<arguments.length;j++) {
-        color1[i] += arguments[j][i]
-      }
-    }
-    return color1
+  add_(baseColor) {
+    return Color.add(baseColor, shift(Object.values(arguments)))
+  }
+
+  static add(baseColor, addList) {
+    range(3).forEach((i) => addList.forEach((color) => baseColor[i] += color[i]))
+    return baseColor
   }
 
   /**
    * Multiply (mix) two or more colors
-   * @param {number[]} color1
+   * @param {number[]} baseColor
    * @param {number[]} color2
    * @returns {number[]}
    */
-  multiply(color1, color2) {
-    var result = color1.slice();
-    for (var i=0;i<3;i++) {
-      for (var j=1;j<arguments.length;j++) {
-        result[i] *= arguments[j][i] / 255
-      }
-      result[i] = Math.round(result[i])
-    }
-    return result
+  multiply(baseColor) {
+    return Color.multiply(baseColor.slice(), shift(Object.values(arguments)))
   }
 
   /**
    * Multiply (mix) two or more colors, MODIFIES FIRST ARGUMENT
-   * @param {number[]} color1
+   * @param {number[]} baseColor
    * @param {number[]} color2
    * @returns {number[]}
    */
-  multiply_(color1, color2) {
-    for (var i=0;i<3;i++) {
-      for (var j=1;j<arguments.length;j++) {
-        color1[i] *= arguments[j][i] / 255
-      }
-      color1[i] = Math.round(color1[i])
-    }
-    return color1
+  multiply_(baseColor) {
+    return Color.multiply(baseColor, shift(Object.values(arguments)))
+  }
+
+  static multiply(baseColor, mixList) {
+    range(3).forEach((i) => {
+      mixList.forEach((color) => baseColor[i] *= color[i] / 255)
+      baseColor[i] = Math.round(baseColor[i])
+    })
+    return baseColor
   }
 
   /**
@@ -109,12 +97,9 @@ class Color {
    * @param {float} [factor=0.5] 0..1
    * @returns {number[]}
    */
-  interpolate(color1, color2, factor) {
-    if (arguments.length < 3) factor = 0.5
-    var result = color1.slice()
-    for (var i=0;i<3;i++) {
-      result[i] = Math.round(result[i] + factor * (color2[i]-color1[i]))
-    }
+  interpolate(color1, color2, factor = 0.5) {
+    const result = color1.slice()
+    range(3).forEach((i) => result[i] = Math.round(result[i] + factor * (color2[i] - color1[i])))
     return result
   }
 
@@ -125,13 +110,10 @@ class Color {
    * @param {float} [factor=0.5] 0..1
    * @returns {number[]}
    */
-  interpolateHSL(color1, color2, factor) {
-    if (arguments.length < 3) factor = 0.5
-    var hsl1 = this.rgb2hsl(color1)
-    var hsl2 = this.rgb2hsl(color2)
-    for (var i=0;i<3;i++) {
-      hsl1[i] += factor * (hsl2[i]-hsl1[i])
-    }
+  interpolateHSL(color1, color2, factor = 0.5) {
+    const hsl1 = this.rgb2hsl(color1)
+    const hsl2 = this.rgb2hsl(color2)
+    range(3).forEach((i) => hsl1[i] += factor * (hsl2[i] - hsl1[i]))
     return this.hsl2rgb(hsl1)
   }
 
@@ -144,9 +126,7 @@ class Color {
   randomize(color, diff) {
     if (!(diff instanceof Array)) diff = Math.round(RNG.getNormal(0, diff))
     const result = color.slice()
-    for (var i=0;i<3;i++) {
-      result[i] += (diff instanceof Array ? Math.round(RNG.getNormal(0, diff[i])) : diff)
-    }
+    range(3).forEach((i) => result[i] += (diff instanceof Array ? Math.round(RNG.getNormal(0, diff[i])) : diff))
     return result
   }
 
@@ -168,7 +148,7 @@ class Color {
     else {
       let d = max - min
       s = (l > 0.5 ? d / (2 - max - min) : d / (max + min))
-      switch(max) {
+      switch (max) {
         case r:
           h = (g - b) / d + (g < b ? 6 : 0)
           break
@@ -202,19 +182,19 @@ class Color {
       const hue2rgb = (p, q, t) => {
         if (t < 0) t += 1;
         if (t > 1) t -= 1;
-        if (t < 1/6) return p + (q - p) * 6 * t;
-        if (t < 1/2) return q;
-        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
         return p;
       }
 
       var s = color[1];
       var q = (l < 0.5 ? l * (1 + s) : l + s - l * s);
       var p = 2 * l - q;
-      var r = hue2rgb(p, q, color[0] + 1/3);
+      var r = hue2rgb(p, q, color[0] + 1 / 3);
       var g = hue2rgb(p, q, color[0]);
-      var b = hue2rgb(p, q, color[0] - 1/3);
-      return [Math.round(r*255), Math.round(g*255), Math.round(b*255)];
+      var b = hue2rgb(p, q, color[0] - 1 / 3);
+      return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
     }
   }
 
@@ -223,10 +203,10 @@ class Color {
   }
 
   toHex(color) {
-    var parts = []
-    for (var i=0;i<3;i++) {
+    const parts = []
+    range(3).forEach((i) => {
       parts.push(lpad('0', 2)(this._clamp(color[i]).toString(16)))
-    }
+    })
     return '#' + parts.join('')
   }
 
