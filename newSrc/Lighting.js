@@ -55,7 +55,7 @@ export default class Lighting {
   setLight(x, y, color) {
     const key = `${x},${y}`
     if (color) {
-      this._lights[key] = (typeof(color) === 'string' ? ROT.Color.fromString(color) : color)
+      this._lights[key] = (typeof(color) === 'string' ? Color.fromString(color) : color)
     }
     else {
       delete this._lights[key]
@@ -221,13 +221,13 @@ export default class Lighting {
     const cache = {}
     this._fovCache[key1] = cache
     const range = this._options.range
-    const cb = (x, y, r, vis) => {
+    const callback = (x, y, r, vis) => {
       const key2 = `${x},${y}`
       const formFactor = vis * (1 - r / range)
       if (formFactor === 0) return
       cache[key2] = formFactor
     }
-    this._fov.compute(x, y, range, cb.bind(this))
+    this._fov.compute(x, y, range, callback)
     return cache
   }
 }
