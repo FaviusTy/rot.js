@@ -1,13 +1,10 @@
+import range from './utils/range'
 import RNG from './rng'
 
 const DEFAULT_OPTIONS = {
   words: false,
   order: 3,
   prior: 0.001
-}
-
-function range(length = 0) {
-  return Array.from(new Array(length), (_, index) => index)
 }
 
 /**
