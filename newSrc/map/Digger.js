@@ -1,5 +1,6 @@
 import DIRS from '../constants/DIRS'
 import RNG from '../rng'
+import pick from '../utils/pick'
 
 import Dungeon from './Dungeon'
 import Room from './features/Room'
@@ -147,7 +148,7 @@ export default class Digger extends Dungeon {
     var arr = (prio2.length ? prio2 : prio1)
     if (!arr.length) return null /* no walls :/ */
 
-    var id = arr.sort().random() // sort to make the order deterministic
+    var id = pick(arr.sort()) // sort to make the order deterministic
     delete this._walls[id]
 
     return id

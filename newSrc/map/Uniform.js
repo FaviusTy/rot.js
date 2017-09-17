@@ -1,3 +1,5 @@
+import pick from '../utils/pick'
+
 import Dungeon from './Dungeon'
 import Room from './features/Room'
 import Corridor from './features/Corridor'
@@ -113,7 +115,7 @@ export default class Uniform extends Dungeon {
 
       while (1) {
         /* 1. pick random connected room */
-        var connected = this._connected.random()
+        var connected = pick(this._connected)
 
         /* 2. find closest unconnected */
         var room1 = this._closestRoom(this._unconnected, connected)
@@ -313,7 +315,7 @@ export default class Uniform extends Dungeon {
     for (var i=avail.length-1; i>=0; i--) {
       if (!avail[i]) avail.splice(i, 1)
     }
-    return (avail.length ? avail.random() : null)
+    return pick(avail)
   }
 
   /**

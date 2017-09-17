@@ -1,4 +1,6 @@
+import pick from '../utils/pick'
 import Map from './Map'
+
 /**
  * @class Recursively divided maze, http://en.wikipedia.org/wiki/Maze_generation_algorithm#Recursive_division_method
  * @augments ROT.Map
@@ -62,8 +64,8 @@ export default class DivideMaze extends Map {
 
     if (!availX.length || !availY.length) return
 
-    var x = availX.random()
-    var y = availY.random()
+    var x = pick(availX)
+    var y = pick(availY)
 
     this._map[x][y] = 1
 
@@ -93,12 +95,12 @@ export default class DivideMaze extends Map {
       w.push([x, j])
     }
 
-    var solid = walls.random();
+    var solid = pick(walls)
     for (var i=0;i<walls.length;i++) {
       var w = walls[i]
       if (w === solid) continue
 
-      var hole = w.random()
+      var hole = pick(w)
       this._map[hole[0]][hole[1]] = 0
     }
 
