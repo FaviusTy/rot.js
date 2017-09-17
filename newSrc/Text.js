@@ -22,8 +22,7 @@ export default class Text{
     const tokens = this.tokenize(str, maxWidth)
     let lineWidth = 0
 
-    for (var i=0;i<tokens.length;i++) {
-      var token = tokens[i]
+    tokens.forEach((token) => {
       switch (token.type) {
         case TYPE_TEXT:
           lineWidth += token.value.length
@@ -35,7 +34,8 @@ export default class Text{
           lineWidth = 0
           break
       }
-    }
+    })
+
     result.width = Math.max(result.width, lineWidth)
     return result
   }
