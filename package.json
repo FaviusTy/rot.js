@@ -12,6 +12,7 @@
   "devDependencies": {
     "@std/esm": "^0.7.1",
     "eater": "3.2.0",
+    "eater-b-reporter": "^0.2.0",
     "eater-pacman-reporter": "0.1.1",
     "espower-loader": "1.2.2",
     "fixpack": "2.3.1",
@@ -28,7 +29,8 @@
     "require": [
       "@std/esm",
       "./enable-power-assert"
-    ]
+    ],
+    "reporter": "eater-b-reporter"
   },
   "homepage": "https://github.com/FaviusTy/rot.js#readme",
   "keywords": [],
