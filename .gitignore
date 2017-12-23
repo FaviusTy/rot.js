@@ -1,6 +1,6 @@
 /coverage
 /lib
-/node_modules
+**/node_modules
 /test
 
 # exclude idea based editors
