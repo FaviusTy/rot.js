@@ -1,8 +1,8 @@
-import DISPLAY from '../constants/DISPLAY'
-import Text, {TYPE_BG, TYPE_FG, TYPE_NEWLINE, TYPE_TEXT} from '../Text'
-import Rect from './Rect'
-import Tile from './Tile'
-import Hex from './Hex'
+import DISPLAY from "../constants/DISPLAY"
+import Text, { TYPE_BG, TYPE_FG, TYPE_NEWLINE, TYPE_TEXT } from "../Text"
+import Rect from "./Rect"
+import Tile from "./Tile"
+import Hex from "./Hex"
 
 const DEFAULT_OPTIONS = {
   width: DISPLAY.DEFAULT_WIDTH,
@@ -22,7 +22,7 @@ const DEFAULT_OPTIONS = {
   tileMap: {},
   tileSet: null,
   tileColorize: false,
-  termColor: "xterm",
+  termColor: "xterm"
 }
 
 /**
@@ -54,7 +54,7 @@ export default class Display {
     this._options = {}
     this._backend = null
 
-    this.setOptions(Object.assign(DEFAULT_OPTIONS, options))
+    this.setOptions(Object.assign({}, DEFAULT_OPTIONS, options))
     this.DEBUG = this.DEBUG.bind(this)
     this._tick = this._tick.bind(this)
     requestAnimationFrame(this._tick)
@@ -84,15 +84,26 @@ export default class Display {
    */
   setOptions(options) {
     this._options = options
-    if (options.width || options.height || options.fontSize || options.fontFamily || options.spacing || options.layout) {
+    if (
+      options.width ||
+      options.height ||
+      options.fontSize ||
+      options.fontFamily ||
+      options.spacing ||
+      options.layout
+    ) {
       if (options.layout) {
         const layoutType = options.layout.capitalize()
-        if(layoutType === 'Rect') this._backend = new Rect(this._context)
-        if(layoutType === 'Hex') this._backend = new Hex(this._context)
+        if (layoutType === "Rect") this._backend = new Rect(this._context)
+        if (layoutType === "Hex") this._backend = new Hex(this._context)
         this._backend = new Tile(this._context)
       }
 
-      const font = (this._options.fontStyle ? this._options.fontStyle + " " : "") + this._options.fontSize + "px " + this._options.fontFamily
+      const font =
+        (this._options.fontStyle ? this._options.fontStyle + " " : "") +
+        this._options.fontSize +
+        "px " +
+        this._options.fontFamily
       this._context.font = font
       this._backend.compute(this._options)
       this._context.font = font
@@ -146,24 +157,30 @@ export default class Display {
    */
   eventToPosition(e) {
     if (e.touches) {
-      var x = e.touches[0].clientX;
-      var y = e.touches[0].clientY;
+      var x = e.touches[0].clientX
+      var y = e.touches[0].clientY
+    } else {
+      var x = e.clientX
+      var y = e.clientY
     }
-    else {
-      var x = e.clientX;
-      var y = e.clientY;
+
+    var rect = this._context.canvas.getBoundingClientRect()
+    x -= rect.left
+    y -= rect.top
+
+    x *= this._context.canvas.width / this._context.canvas.clientWidth
+    y *= this._context.canvas.height / this._context.canvas.clientHeight
+
+    if (
+      x < 0 ||
+      y < 0 ||
+      x >= this._context.canvas.width ||
+      y >= this._context.canvas.height
+    ) {
+      return [-1, -1]
     }
 
-    var rect = this._context.canvas.getBoundingClientRect();
-    x -= rect.left;
-    y -= rect.top;
-
-    x *= this._context.canvas.width / this._context.canvas.clientWidth;
-    y *= this._context.canvas.height / this._context.canvas.clientHeight;
-
-    if (x < 0 || y < 0 || x >= this._context.canvas.width || y >= this._context.canvas.height) { return [-1, -1]; }
-
-    return this._backend.eventToPosition(x, y);
+    return this._backend.eventToPosition(x, y)
   }
 
   /**
@@ -176,11 +193,11 @@ export default class Display {
   draw(x, y, ch, fg, bg) {
     if (!fg) fg = this._options.fg
     if (!bg) bg = this._options.bg
-    this._data[x+","+y] = [x, y, ch, fg, bg]
+    this._data[x + "," + y] = [x, y, ch, fg, bg]
 
     if (this._dirty === true) return /* will already redraw everything */
     if (!this._dirty) this._dirty = {} /* first! */
-    this._dirty[x+","+y] = true
+    this._dirty[x + "," + y] = true
   }
 
   /**
@@ -197,28 +214,35 @@ export default class Display {
     var cx = x
     var cy = y
     var lines = 1
-    if (!maxWidth) maxWidth = this._options.width-x
+    if (!maxWidth) maxWidth = this._options.width - x
 
     var tokens = Text.tokenize(text, maxWidth)
 
-    while (tokens.length) { /* interpret tokenized opcode stream */
+    while (tokens.length) {
+      /* interpret tokenized opcode stream */
       var token = tokens.shift()
       switch (token.type) {
         case TYPE_TEXT:
-          var isSpace = false, isPrevSpace = false, isFullWidth = false, isPrevFullWidth = false
-          for (var i=0;i<token.value.length;i++) {
+          var isSpace = false,
+            isPrevSpace = false,
+            isFullWidth = false,
+            isPrevFullWidth = false
+          for (var i = 0; i < token.value.length; i++) {
             var cc = token.value.charCodeAt(i)
             var c = token.value.charAt(i)
             // Assign to `true` when the current char is full-width.
-            isFullWidth = (cc > 0xff00 && cc < 0xff61) || (cc > 0xffdc && cc < 0xffe8) || cc > 0xffee
+            isFullWidth =
+              (cc > 0xff00 && cc < 0xff61) ||
+              (cc > 0xffdc && cc < 0xffe8) ||
+              cc > 0xffee
             // Current char is space, whatever full-width or half-width both are OK.
-            isSpace = (c.charCodeAt(0) === 0x20 || c.charCodeAt(0) === 0x3000)
+            isSpace = c.charCodeAt(0) === 0x20 || c.charCodeAt(0) === 0x3000
             // The previous char is full-width and
             // current char is nether half-width nor a space.
             if (isPrevFullWidth && !isFullWidth && !isSpace) cx++ // add an extra position
             // The current char is full-width and
             // the previous char is not a space.
-            if(isFullWidth && !isPrevSpace) cx++ // add an extra position
+            if (isFullWidth && !isPrevSpace) cx++ // add an extra position
             this.draw(cx++, cy, c, fg, bg)
             isPrevSpace = isSpace
             isPrevFullWidth = isFullWidth
@@ -252,15 +276,22 @@ export default class Display {
 
     if (!this._dirty) return
 
-    if (this._dirty === true) { /* draw all */
+    if (this._dirty === true) {
+      /* draw all */
       this._context.fillStyle = this._options.bg
-      this._context.fillRect(0, 0, this._context.canvas.width, this._context.canvas.height)
+      this._context.fillRect(
+        0,
+        0,
+        this._context.canvas.width,
+        this._context.canvas.height
+      )
 
-      for (var id in this._data) { /* redraw cached data */
+      for (var id in this._data) {
+        /* redraw cached data */
         this._draw(id, false)
       }
-
-    } else { /* draw only dirty */
+    } else {
+      /* draw only dirty */
       for (var key in this._dirty) {
         this._draw(key, true)
       }
