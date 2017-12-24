@@ -27,24 +27,21 @@ export default class AStar extends Path {
 
     while (this._todo.length) {
       var item = this._todo.shift()
-      var id = item.x+","+item.y
+      var id = item.x + ',' + item.y
       if (id in this._done) continue
       this._done[id] = item
       if (item.x === fromX && item.y === fromY) break
 
       var neighbors = this._getNeighbors(item.x, item.y)
-
-      for (var i=0;i<neighbors.length;i++) {
-        var neighbor = neighbors[i]
-        var x = neighbor[0]
-        var y = neighbor[1]
-        var id = x+","+y
-        if (id in this._done) continue
+      neighbors.forEach(neighbor => {
+        const [x, y] = neighbor
+        const id = `${x},${y}`
+        if (Object.keys(this._done).includes(id)) return
         this._add(x, y, item)
-      }
+      })
     }
 
-    var item = this._done[fromX+","+fromY]
+    var item = this._done[fromX + ',' + fromY]
     if (!item) return
 
     while (item) {
@@ -59,14 +56,14 @@ export default class AStar extends Path {
       x: x,
       y: y,
       prev: prev,
-      g: (prev ? prev.g+1 : 0),
+      g: prev ? prev.g + 1 : 0,
       h: h,
     }
 
     /* insert into priority queue */
 
     var f = obj.g + obj.h
-    for (var i=0;i<this._todo.length;i++) {
+    for (var i = 0; i < this._todo.length; i++) {
       var item = this._todo[i]
       var itemF = item.g + item.h
       if (f < itemF || (f === itemF && h < item.h)) {
@@ -81,18 +78,18 @@ export default class AStar extends Path {
   _distance(x, y) {
     switch (this._options.topology) {
       case 4:
-        return (Math.abs(x-this._fromX) + Math.abs(y-this._fromY))
+        return Math.abs(x - this._fromX) + Math.abs(y - this._fromY)
         break
       case 6:
         var dx = Math.abs(x - this._fromX)
         var dy = Math.abs(y - this._fromY)
-        return dy + Math.max(0, (dx-dy)/2)
+        return dy + Math.max(0, (dx - dy) / 2)
         break
       case 8:
-        return Math.max(Math.abs(x-this._fromX), Math.abs(y-this._fromY))
+        return Math.max(Math.abs(x - this._fromX), Math.abs(y - this._fromY))
         break
     }
 
-    throw new Error("Illegal topology")
+    throw new Error('Illegal topology')
   }
 }
