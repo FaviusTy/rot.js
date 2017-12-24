@@ -15,9 +15,10 @@ export default class Path {
     this._fromX = null
     this._fromY = null
     this._passableCallback = passableCallback
-    this._options = Object.assign({topology: 8}, options)
+    this._options = Object.assign({ topology: 8 }, options)
     this._dirs = DIRS[this._options.topology]
-    if (this._options.topology === 8) { /* reorder dirs for more aesthetic result (vertical/horizontal first) */
+    if (this._options.topology === 8) {
+      /* reorder dirs for more aesthetic result (vertical/horizontal first) */
       this._dirs = [
         this._dirs[0],
         this._dirs[2],
@@ -41,15 +42,13 @@ export default class Path {
 
   _getNeighbors(cx, cy) {
     const result = []
-    for (let i=0;i<this._dirs.length;i++) {
-      const dir = this._dirs[i]
-      const x = cx + dir[0]
-      const y = cy + dir[1]
-
-      if (!this._passableCallback(x, y)) continue
+    return this._dirs.reduce((result, dir) => {
+      const [dirX, dirY] = dir
+      const x = cx + dirX
+      const y = cy + dirY
+      if (!this._passableCallback(x, y)) return result
       result.push([x, y])
-    }
-
-    return result
+      return result
+    }, [])
   }
 }
