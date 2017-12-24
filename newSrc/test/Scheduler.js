@@ -9,11 +9,11 @@ const test = Runner.test
 
 // Simple
 {
-  const A1 = "A1"
-  const A2 = "A2"
-  const A3 = "A3"
+  const A1 = 'A1'
+  const A2 = 'A2'
+  const A3 = 'A3'
 
-  test("should schedule actors evenly", () => {
+  test('should schedule actors evenly', () => {
     var S = new SimpleScheduler()
     S.add(A1, true)
     S.add(A2, true)
@@ -25,7 +25,7 @@ const test = Runner.test
     assert.deepEqual(result, [A1, A2, A3, A1, A2, A3])
   })
 
-  test("should schedule one-time events", () => {
+  test('should schedule one-time events', () => {
     var S = new SimpleScheduler()
     S.add(A1, false)
     S.add(A2, true)
@@ -36,7 +36,7 @@ const test = Runner.test
     assert.deepEqual(result, [A1, A2, A2, A2])
   })
 
-  test("should remove repeated events", () => {
+  test('should remove repeated events', () => {
     var S = new SimpleScheduler()
     S.add(A1, false)
     S.add(A2, true)
@@ -49,7 +49,7 @@ const test = Runner.test
     assert.deepEqual(result, [A1, A3, A3, A3])
   })
 
-  test("should remove one-time events", () => {
+  test('should remove one-time events', () => {
     var S = new SimpleScheduler()
     S.add(A1, false)
     S.add(A2, false)
@@ -80,7 +80,7 @@ const test = Runner.test
   var A100b = new Action(100)
   var A200 = new Action(200)
 
-  test("should schedule same speed evenly", () => {
+  test('should schedule same speed evenly', () => {
     var S = new SpeedScheduler()
     S.add(A100a, true)
     S.add(A100b, true)
@@ -92,7 +92,7 @@ const test = Runner.test
     assert.deepEqual(result, [A100a, A100b, A100a, A100b])
   })
 
-  test("should schedule different speeds properly", () => {
+  test('should schedule different speeds properly', () => {
     var S = new SpeedScheduler()
     S.add(A50, true)
     S.add(A100a, true)
@@ -104,7 +104,7 @@ const test = Runner.test
     assert.deepEqual(result, [A200, A100a, A200, A200, A50, A100a, A200])
   })
 
-  test("should schedule with initial offsets", () => {
+  test('should schedule with initial offsets', () => {
     var S = new SpeedScheduler()
     S.add(A50, true, 1 / 300)
     S.add(A100a, true, 0)
@@ -116,7 +116,7 @@ const test = Runner.test
     assert.deepEqual(result, [A100a, A50, A200, A100a, A200, A200, A100a, A200, A50])
   })
 
-  test("should look up the time of an event", () => {
+  test('should look up the time of an event', () => {
     var S = new SpeedScheduler()
     S.add(A100a, true)
     S.add(A50, true, 1 / 200)
@@ -127,11 +127,11 @@ const test = Runner.test
 
 // Action
 {
-  var A1 = "A1"
-  var A2 = "A2"
-  var A3 = "A3"
+  var A1 = 'A1'
+  var A2 = 'A2'
+  var A3 = 'A3'
 
-  test("should schedule evenly by default", () => {
+  test('should schedule evenly by default', () => {
     const S = new ActionScheduler()
     S.add(A1, true)
     S.add(A2, true)
@@ -143,7 +143,7 @@ const test = Runner.test
     assert.deepEqual(result, [A1, A2, A3, A1, A2, A3])
   })
 
-  test("should schedule with respect to extra argument", () => {
+  test('should schedule with respect to extra argument', () => {
     const S = new ActionScheduler()
     S.add(A1, true)
     S.add(A2, true, 2)
@@ -155,7 +155,7 @@ const test = Runner.test
     assert.deepEqual(result, [A1, A3, A2, A1, A3, A2])
   })
 
-  test("should schedule with respect to action duration", () => {
+  test('should schedule with respect to action duration', () => {
     const S = new ActionScheduler()
     S.add(A1, true)
     S.add(A2, true)

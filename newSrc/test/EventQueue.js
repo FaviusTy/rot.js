@@ -4,26 +4,25 @@ import EventQueue from '../EventQueue'
 
 const test = Runner.test
 
-
-test("should return added event", () => {
+test('should return added event', () => {
   const q = new EventQueue()
-  q.add("a", 100)
-  assert(q.get() === "a")
+  q.add('a', 100)
+  assert(q.get() === 'a')
 })
 
-test("should return null when no events are available", () => {
+test('should return null when no events are available', () => {
   const q = new EventQueue()
   assert(!q.get())
 })
 
-test("should remove returned events", () => {
+test('should remove returned events', () => {
   const q = new EventQueue()
   q.add(0, 0)
   q.get()
   assert(!q.get())
 })
 
-test("should look up time of events", () => {
+test('should look up time of events', () => {
   const q = new EventQueue()
   q.add(123, 187)
   q.add(456, 42)
@@ -31,18 +30,18 @@ test("should look up time of events", () => {
   assert(q.getEventTime(456) === 42)
 })
 
-test("should look up correct times after events removed", () => {
+test('should look up correct times after events removed', () => {
   const q = new EventQueue()
   q.add(123, 187)
   q.add(456, 42)
   q.add(789, 411)
   q.get()
   assert(!q.getEventTime(456))
-  assert(q.getEventTime(123) === (187 - 42))
-  assert(q.getEventTime(789) === (411 - 42))
+  assert(q.getEventTime(123) === 187 - 42)
+  assert(q.getEventTime(789) === 411 - 42)
 })
 
-test("should remove events", () => {
+test('should remove events', () => {
   const q = new EventQueue()
   q.add(123, 0)
   q.add(456, 0)
@@ -51,7 +50,7 @@ test("should remove events", () => {
   assert(q.get() === 456)
 })
 
-test("should survive removal of non-existant events", () => {
+test('should survive removal of non-existant events', () => {
   const q = new EventQueue()
   q.add(0, 0)
   const result = q.remove(1)
@@ -59,7 +58,7 @@ test("should survive removal of non-existant events", () => {
   assert(q.get() === 0)
 })
 
-test("should return events sorted", () => {
+test('should return events sorted', () => {
   const q = new EventQueue()
   q.add(456, 10)
   q.add(123, 5)
@@ -69,7 +68,7 @@ test("should return events sorted", () => {
   assert(q.get() === 789)
 })
 
-test("should compute elapsed time", () => {
+test('should compute elapsed time', () => {
   const q = new EventQueue()
   q.add(456, 10)
   q.add(123, 5)
@@ -80,7 +79,7 @@ test("should compute elapsed time", () => {
   assert(q.time === 15)
 })
 
-test("should maintain event order for same timestamps", () => {
+test('should maintain event order for same timestamps', () => {
   const q = new EventQueue()
   q.add(456, 10)
   q.add(123, 10)
@@ -90,4 +89,3 @@ test("should maintain event order for same timestamps", () => {
   assert(q.get() === 789)
   assert(q.time === 10)
 })
-

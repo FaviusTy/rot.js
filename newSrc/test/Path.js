@@ -12,7 +12,8 @@ const test = Runner.test
  * .###.###
  * ....Z...
  */
-const MAP48 = [/* transposed */
+const MAP48 = [
+  /* transposed */
   [0, 0, 0, 0, 0],
   [0, 1, 0, 1, 0],
   [0, 1, 0, 1, 0],
@@ -42,7 +43,8 @@ const PATH_CALLBACK = (x, y) => PATH.push(x, y)
  *  # . . # .
  * X # # # Z .
  */
-const MAP6 = [/* transposed */
+const MAP6 = [
+  /* transposed */
   [0, null, 0, null, 0],
   [null, 0, null, 1, null],
   [0, null, 0, null, 1],
@@ -68,8 +70,8 @@ const PASSABLE_CALLBACK_6 = (x, y) => {
 
 let VISITS = 0
 const PASSABLE_CALLBACK_VISIT = () => {
-  VISITS++;
-  return true;
+  VISITS++
+  return true
 }
 
 const beforeEach = () => {
@@ -83,21 +85,21 @@ const beforeEach = () => {
   {
     const PATH_A = [0, 1, 0, 2, 0, 3, 1, 4, 2, 4, 3, 4, 4, 4]
     const PATH_B = [2, 2, 1, 2, 0, 3, 1, 4, 2, 4, 3, 4, 4, 4]
-    const dijkstra = new Dijkstra(Z[0], Z[1], PASSABLE_CALLBACK_48, {topology: 8})
+    const dijkstra = new Dijkstra(Z[0], Z[1], PASSABLE_CALLBACK_48, { topology: 8 })
 
-    test("should compute correct path A", () => {
+    test('should compute correct path A', () => {
       beforeEach()
       dijkstra.compute(A[0], A[1], PATH_CALLBACK)
       assert(PATH.toString() === PATH_A.toString())
     })
 
-    test("should compute correct path B", () => {
+    test('should compute correct path B', () => {
       beforeEach()
       dijkstra.compute(B[0], B[1], PATH_CALLBACK)
       assert(PATH.toString() === PATH_B.toString())
     })
 
-    test("should survive non-existant path X", () => {
+    test('should survive non-existant path X', () => {
       beforeEach()
       dijkstra.compute(X[0], X[1], PATH_CALLBACK)
       assert(PATH.length === 0)
@@ -107,21 +109,21 @@ const beforeEach = () => {
   {
     const PATH_A = [0, 1, 0, 2, 0, 3, 0, 4, 1, 4, 2, 4, 3, 4, 4, 4]
     const PATH_B = [2, 2, 1, 2, 0, 2, 0, 3, 0, 4, 1, 4, 2, 4, 3, 4, 4, 4]
-    const dijkstra = new Dijkstra(Z[0], Z[1], PASSABLE_CALLBACK_48, {topology: 4})
+    const dijkstra = new Dijkstra(Z[0], Z[1], PASSABLE_CALLBACK_48, { topology: 4 })
 
-    test("should compute correct path A", () => {
+    test('should compute correct path A', () => {
       beforeEach()
       dijkstra.compute(A[0], A[1], PATH_CALLBACK)
       assert(PATH.toString() === PATH_A.toString())
     })
 
-    test("should compute correct path B", () => {
+    test('should compute correct path B', () => {
       beforeEach()
       dijkstra.compute(B[0], B[1], PATH_CALLBACK)
       assert(PATH.toString() === PATH_B.toString())
     })
 
-    test("should survive non-existant path X", () => {
+    test('should survive non-existant path X', () => {
       beforeEach()
       dijkstra.compute(X[0], X[1], PATH_CALLBACK)
       assert(PATH.length === 0)
@@ -131,21 +133,21 @@ const beforeEach = () => {
   {
     const PATH_A = [4, 0, 2, 0, 1, 1, 2, 2, 3, 3, 5, 3, 6, 2, 8, 2, 9, 3, 8, 4]
     const PATH_B = [10, 0, 9, 1, 8, 2, 9, 3, 8, 4]
-    const dijkstra = new Dijkstra(Z6[0], Z6[1], PASSABLE_CALLBACK_6, {topology: 6})
+    const dijkstra = new Dijkstra(Z6[0], Z6[1], PASSABLE_CALLBACK_6, { topology: 6 })
 
-    test("should compute correct path A", () => {
+    test('should compute correct path A', () => {
       beforeEach()
       dijkstra.compute(A6[0], A6[1], PATH_CALLBACK)
       assert(PATH.toString() === PATH_A.toString())
     })
 
-    test("should compute correct path B", () => {
+    test('should compute correct path B', () => {
       beforeEach()
       dijkstra.compute(B6[0], B6[1], PATH_CALLBACK)
       assert(PATH.toString() === PATH_B.toString())
     })
 
-    test("should survive non-existant path X", () => {
+    test('should survive non-existant path X', () => {
       beforeEach()
       dijkstra.compute(X6[0], X6[1], PATH_CALLBACK)
       assert(PATH.length === 0)
@@ -159,27 +161,27 @@ const beforeEach = () => {
   {
     const PATH_A = [0, 1, 0, 2, 0, 3, 1, 4, 2, 4, 3, 4, 4, 4]
     const PATH_B = [2, 2, 1, 2, 0, 3, 1, 4, 2, 4, 3, 4, 4, 4]
-    const astar = new AStar(Z[0], Z[1], PASSABLE_CALLBACK_48, {topology: 8})
+    const astar = new AStar(Z[0], Z[1], PASSABLE_CALLBACK_48, { topology: 8 })
 
-    test("should compute correct path A", () => {
+    test('should compute correct path A', () => {
       beforeEach()
       astar.compute(A[0], A[1], PATH_CALLBACK)
       assert(PATH.toString() === PATH_A.toString())
     })
 
-    test("should compute correct path B", () => {
+    test('should compute correct path B', () => {
       beforeEach()
       astar.compute(B[0], B[1], PATH_CALLBACK)
       assert(PATH.toString() === PATH_B.toString())
     })
 
-    test("should survive non-existant path X", () => {
+    test('should survive non-existant path X', () => {
       beforeEach()
       astar.compute(X[0], X[1], PATH_CALLBACK)
       assert(PATH.length === 0)
     })
 
-    test("should efficiently compute path", () => {
+    test('should efficiently compute path', () => {
       beforeEach()
       const open_astar = new AStar(0, 0, PASSABLE_CALLBACK_VISIT)
       open_astar.compute(50, 0, PATH_CALLBACK)
@@ -190,21 +192,21 @@ const beforeEach = () => {
   {
     const PATH_A = [0, 1, 0, 2, 0, 3, 0, 4, 1, 4, 2, 4, 3, 4, 4, 4]
     const PATH_B = [2, 2, 1, 2, 0, 2, 0, 3, 0, 4, 1, 4, 2, 4, 3, 4, 4, 4]
-    const astar = new AStar(Z[0], Z[1], PASSABLE_CALLBACK_48, {topology: 4})
+    const astar = new AStar(Z[0], Z[1], PASSABLE_CALLBACK_48, { topology: 4 })
 
-    test("should compute correct path A", () => {
+    test('should compute correct path A', () => {
       beforeEach()
       astar.compute(A[0], A[1], PATH_CALLBACK)
       assert(PATH.toString() === PATH_A.toString())
     })
 
-    test("should compute correct path B", () => {
+    test('should compute correct path B', () => {
       beforeEach()
       astar.compute(B[0], B[1], PATH_CALLBACK)
       assert(PATH.toString() === PATH_B.toString())
     })
 
-    test("should survive non-existant path X", () => {
+    test('should survive non-existant path X', () => {
       beforeEach()
       astar.compute(X[0], X[1], PATH_CALLBACK)
       assert(PATH.length === 0)
@@ -214,21 +216,21 @@ const beforeEach = () => {
   {
     const PATH_A = [4, 0, 2, 0, 1, 1, 2, 2, 3, 3, 5, 3, 6, 2, 8, 2, 9, 3, 8, 4]
     const PATH_B = [10, 0, 9, 1, 8, 2, 9, 3, 8, 4]
-    const astar = new AStar(Z6[0], Z6[1], PASSABLE_CALLBACK_6, {topology: 6})
+    const astar = new AStar(Z6[0], Z6[1], PASSABLE_CALLBACK_6, { topology: 6 })
 
-    test("should compute correct path A", () => {
+    test('should compute correct path A', () => {
       beforeEach()
       astar.compute(A6[0], A6[1], PATH_CALLBACK)
       assert(PATH.toString() === PATH_A.toString())
     })
 
-    test("should compute correct path B", () => {
+    test('should compute correct path B', () => {
       beforeEach()
       astar.compute(B6[0], B6[1], PATH_CALLBACK)
       assert(PATH.toString() === PATH_B.toString())
     })
 
-    test("should survive non-existant path X", () => {
+    test('should survive non-existant path X', () => {
       beforeEach()
       astar.compute(X6[0], X6[1], PATH_CALLBACK)
       assert(PATH.length === 0)

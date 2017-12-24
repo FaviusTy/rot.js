@@ -11,23 +11,26 @@ let S = new SpeedScheduler()
 let E = new Engine(S)
 
 const A50 = {
-  getSpeed: () => 50, act: () => {
+  getSpeed: () => 50,
+  act: () => {
     RESULT++
-  }
+  },
 }
 const A70 = {
-  getSpeed: () => 70, act: () => {
-    RESULT++;
+  getSpeed: () => 70,
+  act: () => {
+    RESULT++
     S.add(A100)
-  }
+  },
 }
 const A100 = {
-  getSpeed: () => 100, act: () => {
+  getSpeed: () => 100,
+  act: () => {
     E.lock()
-  }
+  },
 }
 
-test("should stop when locked", () => {
+test('should stop when locked', () => {
   RESULT = 0
   S = new SpeedScheduler()
   E = new Engine(S)
@@ -38,7 +41,7 @@ test("should stop when locked", () => {
   assert(RESULT === 0)
 })
 
-test("should run until locked", () => {
+test('should run until locked', () => {
   RESULT = 0
   S = new SpeedScheduler()
   E = new Engine(S)
@@ -49,7 +52,7 @@ test("should run until locked", () => {
   assert(RESULT === 2)
 })
 
-test("should run only when unlocked", () => {
+test('should run only when unlocked', () => {
   RESULT = 0
   S = new SpeedScheduler()
   E = new Engine(S)

@@ -1,5 +1,5 @@
 import assert from 'power-assert'
-import {is, gt, lt, gte, lte} from 'ramda'
+import { is, gt, lt, gte, lte } from 'ramda'
 
 import RNG from '../rng'
 
@@ -22,11 +22,10 @@ import RNG from '../rng'
   const result2 = RNG.getUniformInt(lowerBound, upperBound)
   assert(result1 === result2, 'should not care which number is larger in the arguments')
   {
-    const result1 = RNG.getUniformInt(lowerBound, upperBound);
-    const result2 = RNG.getUniformInt(upperBound, lowerBound);
+    const result1 = RNG.getUniformInt(lowerBound, upperBound)
+    const result2 = RNG.getUniformInt(upperBound, lowerBound)
     assert(
-      lte(result1, upperBound) && gte(result1, lowerBound) &&
-      lte(result2, upperBound) && gte(result2, lowerBound),
+      lte(result1, upperBound) && gte(result1, lowerBound) && lte(result2, upperBound) && gte(result2, lowerBound),
       'should only return a number in the desired range',
     )
   }
