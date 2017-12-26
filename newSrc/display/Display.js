@@ -1,28 +1,29 @@
-import DISPLAY from "../constants/DISPLAY"
-import Text, { TYPE_BG, TYPE_FG, TYPE_NEWLINE, TYPE_TEXT } from "../Text"
-import Rect from "./Rect"
-import Tile from "./Tile"
-import Hex from "./Hex"
+import capitalize from '../utils/capitalize'
+import DISPLAY from '../constants/DISPLAY'
+import Text, { TYPE_BG, TYPE_FG, TYPE_NEWLINE, TYPE_TEXT } from '../Text'
+import Rect from './Rect'
+import Tile from './Tile'
+import Hex from './Hex'
 
 const DEFAULT_OPTIONS = {
   width: DISPLAY.DEFAULT_WIDTH,
   height: DISPLAY.DEFAULT_HEIGHT,
   transpose: false,
-  layout: "rect",
+  layout: 'rect',
   fontSize: 15,
   spacing: 1,
   border: 0,
   forceSquareRatio: false,
-  fontFamily: "monospace",
-  fontStyle: "",
-  fg: "#ccc",
-  bg: "#000",
+  fontFamily: 'monospace',
+  fontStyle: '',
+  fg: '#ccc',
+  bg: '#000',
   tileWidth: 32,
   tileHeight: 32,
   tileMap: {},
   tileSet: null,
   tileColorize: false,
-  termColor: "xterm"
+  termColor: 'xterm',
 }
 
 /**
@@ -47,8 +48,8 @@ const DEFAULT_OPTIONS = {
  */
 export default class Display {
   constructor(options = {}) {
-    const canvas = document.createElement("canvas")
-    this._context = canvas.getContext("2d")
+    const canvas = document.createElement('canvas')
+    this._context = canvas.getContext('2d')
     this._data = {}
     this._dirty = false /* false = nothing, true = all, object = dirty cells */
     this._options = {}
@@ -93,22 +94,22 @@ export default class Display {
       options.layout
     ) {
       if (options.layout) {
-        const layoutType = options.layout.capitalize()
-        if (layoutType === "Rect") this._backend = new Rect(this._context)
-        if (layoutType === "Hex") this._backend = new Hex(this._context)
+        const layoutType = capitalize(options.layout)
+        if (layoutType === 'Rect') this._backend = new Rect(this._context)
+        if (layoutType === 'Hex') this._backend = new Hex(this._context)
         this._backend = new Tile(this._context)
       }
 
       const font =
-        (this._options.fontStyle ? this._options.fontStyle + " " : "") +
+        (this._options.fontStyle ? this._options.fontStyle + ' ' : '') +
         this._options.fontSize +
-        "px " +
+        'px ' +
         this._options.fontFamily
       this._context.font = font
       this._backend.compute(this._options)
       this._context.font = font
-      this._context.textAlign = "center"
-      this._context.textBaseline = "middle"
+      this._context.textAlign = 'center'
+      this._context.textBaseline = 'middle'
       this._dirty = true
     }
     return this
@@ -171,12 +172,7 @@ export default class Display {
     x *= this._context.canvas.width / this._context.canvas.clientWidth
     y *= this._context.canvas.height / this._context.canvas.clientHeight
 
-    if (
-      x < 0 ||
-      y < 0 ||
-      x >= this._context.canvas.width ||
-      y >= this._context.canvas.height
-    ) {
+    if (x < 0 || y < 0 || x >= this._context.canvas.width || y >= this._context.canvas.height) {
       return [-1, -1]
     }
 
@@ -193,11 +189,11 @@ export default class Display {
   draw(x, y, ch, fg, bg) {
     if (!fg) fg = this._options.fg
     if (!bg) bg = this._options.bg
-    this._data[x + "," + y] = [x, y, ch, fg, bg]
+    this._data[x + ',' + y] = [x, y, ch, fg, bg]
 
     if (this._dirty === true) return /* will already redraw everything */
     if (!this._dirty) this._dirty = {} /* first! */
-    this._dirty[x + "," + y] = true
+    this._dirty[x + ',' + y] = true
   }
 
   /**
@@ -231,10 +227,7 @@ export default class Display {
             var cc = token.value.charCodeAt(i)
             var c = token.value.charAt(i)
             // Assign to `true` when the current char is full-width.
-            isFullWidth =
-              (cc > 0xff00 && cc < 0xff61) ||
-              (cc > 0xffdc && cc < 0xffe8) ||
-              cc > 0xffee
+            isFullWidth = (cc > 0xff00 && cc < 0xff61) || (cc > 0xffdc && cc < 0xffe8) || cc > 0xffee
             // Current char is space, whatever full-width or half-width both are OK.
             isSpace = c.charCodeAt(0) === 0x20 || c.charCodeAt(0) === 0x3000
             // The previous char is full-width and
@@ -279,12 +272,7 @@ export default class Display {
     if (this._dirty === true) {
       /* draw all */
       this._context.fillStyle = this._options.bg
-      this._context.fillRect(
-        0,
-        0,
-        this._context.canvas.width,
-        this._context.canvas.height
-      )
+      this._context.fillRect(0, 0, this._context.canvas.width, this._context.canvas.height)
 
       for (var id in this._data) {
         /* redraw cached data */

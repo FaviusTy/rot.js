@@ -1,6 +1,7 @@
 /coverage
 /lib
 **/node_modules
+tutorial/game.js
 /test
 
 # exclude idea based editors
