@@ -95,7 +95,6 @@ export default class Display {
     ) {
       if (options.layout) {
         const layoutType = capitalize(options.layout)
-        console.log(layoutType)
         switch (layoutType) {
           case 'Rect':
             this._backend = new Rect(this._context)
