@@ -95,9 +95,17 @@ export default class Display {
     ) {
       if (options.layout) {
         const layoutType = capitalize(options.layout)
-        if (layoutType === 'Rect') this._backend = new Rect(this._context)
-        if (layoutType === 'Hex') this._backend = new Hex(this._context)
-        this._backend = new Tile(this._context)
+        console.log(layoutType)
+        switch (layoutType) {
+          case 'Rect':
+            this._backend = new Rect(this._context)
+            break
+          case 'Hex':
+            this._backend = new Hex(this._context)
+            break
+          default:
+            this._backend = new Tile(this._context)
+        }
       }
 
       const font =
