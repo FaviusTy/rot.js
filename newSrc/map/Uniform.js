@@ -10,22 +10,25 @@ import Corridor from './features/Corridor'
  * @augments ROT.Map.Dungeon
  */
 export default class Uniform extends Dungeon {
-	constructor(width, height, options = {}) {
-    super(width, height);
+  constructor(width, height, options = {}) {
+    super(width, height)
 
-    this._options = Object.assign({
-      roomWidth: [3, 9], /* room minimum and maximum width */
-      roomHeight: [3, 5], /* room minimum and maximum height */
-      roomDugPercentage: 0.1, /* we stop after this percentage of level area has been dug out by rooms */
-      timeLimit: 1000 /* we stop after this much time has passed (msec) */
-		}, options)
+    this._options = Object.assign(
+      {
+        roomWidth: [3, 9] /* room minimum and maximum width */,
+        roomHeight: [3, 5] /* room minimum and maximum height */,
+        roomDugPercentage: 0.1 /* we stop after this percentage of level area has been dug out by rooms */,
+        timeLimit: 1000 /* we stop after this much time has passed (msec) */,
+      },
+      options,
+    )
 
     this._roomAttempts = 20 /* new room is created N-times until is considered as impossible to generate */
     this._corridorAttempts = 20 /* corridors are tried N-times until the level is considered as impossible to connect */
 
     this._connected = [] /* list of already connected rooms */
     this._unconnected = [] /* list of remaining unconnected rooms */
-	}
+  }
 
   /**
    * Create a map. If the time limit has been hit, returns null.
@@ -47,8 +50,8 @@ export default class Uniform extends Dungeon {
     }
 
     if (callback) {
-      for (var i=0;i<this._width;i++) {
-        for (var j=0;j<this._height;j++) {
+      for (var i = 0; i < this._width; i++) {
+        for (var j = 0; j < this._height; j++) {
           callback(i, j, this._map[i][j])
         }
       }
@@ -61,12 +64,12 @@ export default class Uniform extends Dungeon {
    * Generates a suitable amount of rooms
    */
   _generateRooms() {
-    var w = this._width-2
-    var h = this._height-2
+    var w = this._width - 2
+    var h = this._height - 2
 
     do {
       var room = this._generateRoom()
-      if (this._dug/(w*h) > this._options.roomDugPercentage) break /* achieved requested amount of free space */
+      if (this._dug / (w * h) > this._options.roomDugPercentage) break /* achieved requested amount of free space */
     } while (room)
 
     /* either enough rooms, or not able to generate more of them :) */
@@ -81,9 +84,10 @@ export default class Uniform extends Dungeon {
       count++
 
       var room = Room.createRandom(this._width, this._height, this._options)
-      if (!room.isValid(this._isWallCallback, this._canBeDugCallback)) continue
+      if (!room.isValid((...args) => this._isWallCallback(...args), (...args) => this._canBeDugCallback(...args)))
+        continue
 
-      room.create(this._digCallback)
+      room.create((...args) => this._digCallback(...args))
       this._rooms.push(room)
       return room
     }
@@ -104,7 +108,7 @@ export default class Uniform extends Dungeon {
 
       /* dig rooms into a clear map */
       this._map = this._fillMap(1)
-      for (var i=0;i<this._rooms.length;i++) {
+      for (var i = 0; i < this._rooms.length; i++) {
         var room = this._rooms[i]
         room.clearDoors()
         room.create(this._digCallback)
@@ -125,7 +129,9 @@ export default class Uniform extends Dungeon {
         var room2 = this._closestRoom(this._connected, room1)
 
         var ok = this._connectRooms(room1, room2)
-        if (!ok) { break; } /* stop connecting, re-shuffle */
+        if (!ok) {
+          break
+        } /* stop connecting, re-shuffle */
 
         if (!this._unconnected.length) return true /* done; no rooms remain */
       }
@@ -141,12 +147,12 @@ export default class Uniform extends Dungeon {
     var center = room.getCenter()
     var result = null
 
-    for (var i=0;i<rooms.length;i++) {
+    for (var i = 0; i < rooms.length; i++) {
       var r = rooms[i]
       var c = r.getCenter()
-      var dx = c[0]-center[0]
-      var dy = c[1]-center[1]
-      var d = dx*dx+dy*dy
+      var dx = c[0] - center[0]
+      var dy = c[1] - center[1]
+      var d = dx * dx + dy * dy
 
       if (d < dist) {
         dist = d
@@ -170,15 +176,16 @@ export default class Uniform extends Dungeon {
     var diffX = center2[0] - center1[0]
     var diffY = center2[1] - center1[1]
 
-    if (Math.abs(diffX) < Math.abs(diffY)) { /* first try connecting north-south walls */
-      var dirIndex1 = (diffY > 0 ? 2 : 0)
+    if (Math.abs(diffX) < Math.abs(diffY)) {
+      /* first try connecting north-south walls */
+      var dirIndex1 = diffY > 0 ? 2 : 0
       var dirIndex2 = (dirIndex1 + 2) % 4
       var min = room2.getLeft()
       var max = room2.getRight()
       index = 0
-    }
-    else { /* first try connecting east-west walls */
-      var dirIndex1 = (diffX > 0 ? 1 : 3)
+    } else {
+      /* first try connecting east-west walls */
+      var dirIndex1 = diffX > 0 ? 1 : 3
       var dirIndex2 = (dirIndex1 + 2) % 4
       var min = room2.getTop()
       var max = room2.getBottom()
@@ -188,38 +195,38 @@ export default class Uniform extends Dungeon {
     var start = this._placeInWall(room1, dirIndex1) /* corridor will start here */
     if (!start) return false
 
-    if (start[index] >= min && start[index] <= max) { /* possible to connect with straight line (I-like) */
+    if (start[index] >= min && start[index] <= max) {
+      /* possible to connect with straight line (I-like) */
       var end = start.slice()
       var value = null
       switch (dirIndex2) {
         case 0:
-          value = room2.getTop()-1
+          value = room2.getTop() - 1
           break
         case 1:
-          value = room2.getRight()+1
+          value = room2.getRight() + 1
           break
         case 2:
-          value = room2.getBottom()+1
+          value = room2.getBottom() + 1
           break
         case 3:
-          value = room2.getLeft()-1
+          value = room2.getLeft() - 1
           break
       }
-      end[(index+1)%2] = value
+      end[(index + 1) % 2] = value
       this._digLine([start, end])
-
-    }
-    else if (start[index] < min-1 || start[index] > max+1) { /* need to switch target wall (L-like) */
+    } else if (start[index] < min - 1 || start[index] > max + 1) {
+      /* need to switch target wall (L-like) */
 
       var diff = start[index] - center2[index]
       switch (dirIndex2) {
         case 0:
         case 1:
-          var rotation = (diff < 0 ? 3 : 1)
+          var rotation = diff < 0 ? 3 : 1
           break
         case 2:
         case 3:
-          var rotation = (diff < 0 ? 1 : 3)
+          var rotation = diff < 0 ? 1 : 3
           break
       }
       dirIndex2 = (dirIndex2 + rotation) % 4
@@ -229,16 +236,16 @@ export default class Uniform extends Dungeon {
 
       var mid = [0, 0]
       mid[index] = start[index]
-      var index2 = (index+1)%2
+      var index2 = (index + 1) % 2
       mid[index2] = end[index2]
       this._digLine([start, mid, end])
-    }
-    else { /* use current wall pair, but adjust the line in the middle (S-like) */
+    } else {
+      /* use current wall pair, but adjust the line in the middle (S-like) */
 
-      var index2 = (index+1)%2
+      var index2 = (index + 1) % 2
       var end = this._placeInWall(room2, dirIndex2)
       if (!end) return false
-      var mid = Math.round((end[index2] + start[index2])/2)
+      var mid = Math.round((end[index2] + start[index2]) / 2)
 
       var mid1 = [0, 0]
       var mid2 = [0, 0]
@@ -275,45 +282,44 @@ export default class Uniform extends Dungeon {
     switch (dirIndex) {
       case 0:
         dir = [1, 0]
-        start = [room.getLeft(), room.getTop()-1]
-        length = room.getRight()-room.getLeft()+1
+        start = [room.getLeft(), room.getTop() - 1]
+        length = room.getRight() - room.getLeft() + 1
         break
       case 1:
         dir = [0, 1]
-        start = [room.getRight()+1, room.getTop()]
-        length = room.getBottom()-room.getTop()+1
+        start = [room.getRight() + 1, room.getTop()]
+        length = room.getBottom() - room.getTop() + 1
         break
       case 2:
         dir = [1, 0]
-        start = [room.getLeft(), room.getBottom()+1]
-        length = room.getRight()-room.getLeft()+1
+        start = [room.getLeft(), room.getBottom() + 1]
+        length = room.getRight() - room.getLeft() + 1
         break
       case 3:
         dir = [0, 1]
-        start = [room.getLeft()-1, room.getTop()]
-        length = room.getBottom()-room.getTop()+1
+        start = [room.getLeft() - 1, room.getTop()]
+        length = room.getBottom() - room.getTop() + 1
         break
     }
 
     var avail = []
     var lastBadIndex = -2
 
-    for (var i=0;i<length;i++) {
-      var x = start[0] + i*dir[0]
-      var y = start[1] + i*dir[1]
+    for (var i = 0; i < length; i++) {
+      var x = start[0] + i * dir[0]
+      var y = start[1] + i * dir[1]
       avail.push(null)
 
-      var isWall = (this._map[x][y] === 1)
+      var isWall = this._map[x][y] === 1
       if (isWall) {
-        if (lastBadIndex !== i-1) avail[i] = [x, y]
-      }
-      else {
+        if (lastBadIndex !== i - 1) avail[i] = [x, y]
+      } else {
         lastBadIndex = i
-        if (i) avail[i-1] = null
+        if (i) avail[i - 1] = null
       }
     }
 
-    for (var i=avail.length-1; i>=0; i--) {
+    for (var i = avail.length - 1; i >= 0; i--) {
       if (!avail[i]) avail.splice(i, 1)
     }
     return pick(avail)
@@ -323,8 +329,8 @@ export default class Uniform extends Dungeon {
    * Dig a polyline.
    */
   _digLine(points) {
-    for (var i=1;i<points.length;i++) {
-      var start = points[i-1]
+    for (var i = 1; i < points.length; i++) {
+      var start = points[i - 1]
       var end = points[i]
       var corridor = new Corridor(start[0], start[1], end[0], end[1])
       corridor.create(this._digCallback)
@@ -339,11 +345,11 @@ export default class Uniform extends Dungeon {
 
   _isWallCallback(x, y) {
     if (x < 0 || y < 0 || x >= this._width || y >= this._height) return false
-    return (this._map[x][y] === 1)
+    return this._map[x][y] === 1
   }
 
   _canBeDugCallback(x, y) {
-    if (x < 1 || y < 1 || x+1 >= this._width || y+1 >= this._height) return false
-    return (this._map[x][y] === 1)
+    if (x < 1 || y < 1 || x + 1 >= this._width || y + 1 >= this._height) return false
+    return this._map[x][y] === 1
   }
 }
