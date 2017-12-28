@@ -4,7 +4,6 @@
  * Alea is licensed according to the http://en.wikipedia.org/wiki/MIT_License.
  */
 class RNG {
-
   constructor() {
     this._s0 = 0
     this._s1 = 0
@@ -18,38 +17,38 @@ class RNG {
    * @returns {number}
    */
   get seed() {
-    return this._seed;
+    return this._seed
   }
 
   /**
    * @param {number} seed Seed the number generator
    */
   set seed(seed) {
-    seed = (seed < 1 ? 1/seed : seed);
+    seed = seed < 1 ? 1 / seed : seed
 
-    this._seed = seed;
-    this._s0 = (seed >>> 0) * this._frac;
+    this._seed = seed
+    this._s0 = (seed >>> 0) * this._frac
 
-    seed = (seed*69069 + 1) >>> 0;
-    this._s1 = seed * this._frac;
+    seed = (seed * 69069 + 1) >>> 0
+    this._s1 = seed * this._frac
 
-    seed = (seed*69069 + 1) >>> 0;
-    this._s2 = seed * this._frac;
+    seed = (seed * 69069 + 1) >>> 0
+    this._s2 = seed * this._frac
 
-    this._c = 1;
-    return this;
+    this._c = 1
+    return this
   }
 
   /**
    * @returns {float} Pseudorandom value [0,1), uniformly distributed
    */
   getUniform() {
-    const t = 2091639 * this._s0 + this._c * this._frac;
-    this._s0 = this._s1;
-    this._s1 = this._s2;
-    this._c = t | 0;
-    this._s2 = t - this._c;
-    return this._s2;
+    const t = 2091639 * this._s0 + this._c * this._frac
+    this._s0 = this._s1
+    this._s1 = this._s2
+    this._c = t | 0
+    this._s2 = t - this._c
+    return this._s2
   }
 
   /**
@@ -58,9 +57,9 @@ class RNG {
    * @returns {int} Pseudorandom value [lowerBound, upperBound], using ROT.RNG.getUniform() to distribute the value
    */
   getUniformInt(lowerBound, upperBound) {
-    const max = Math.max(lowerBound, upperBound);
-    const min = Math.min(lowerBound, upperBound);
-    return Math.floor(this.getUniform() * (max - min + 1)) + min;
+    const max = Math.max(lowerBound, upperBound)
+    const min = Math.min(lowerBound, upperBound)
+    return Math.floor(this.getUniform() * (max - min + 1)) + min
   }
 
   /**
@@ -78,7 +77,7 @@ class RNG {
       r = u * u + v * v
     } while (r > 1 || r === 0)
 
-    const gauss = u * Math.sqrt( -2 * Math.log(r) / r)
+    const gauss = u * Math.sqrt(-2 * Math.log(r) / r)
     return (mean || 0) + gauss * (stddev || 1)
   }
 
@@ -94,13 +93,13 @@ class RNG {
    * @returns {string} whatever
    */
   getWeightedValue(data) {
-    const total = data.reduce((total, value) => total + value, 0)
+    const total = Object.keys(data).reduce((total, key) => total + data[key], 0)
     const random = this.getUniform() * total
 
     let part = 0
 
     for (var id in data) {
-      part += data[id];
+      part += data[id]
       if (random < part) return id
     }
 
@@ -114,7 +113,7 @@ class RNG {
    * @returns {?} Internal state
    */
   get state() {
-    return [this._s0, this._s1, this._s2, this._c];
+    return [this._s0, this._s1, this._s2, this._c]
   }
 
   /**
@@ -122,11 +121,11 @@ class RNG {
    * @param {?} state
    */
   set state(state) {
-    this._s0 = state[0];
-    this._s1 = state[1];
-    this._s2 = state[2];
-    this._c  = state[3];
-    return this;
+    this._s0 = state[0]
+    this._s1 = state[1]
+    this._s2 = state[2]
+    this._c = state[3]
+    return this
   }
 
   /**
