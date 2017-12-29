@@ -1,6 +1,7 @@
 import Display from '../../newSrc/display/Display'
 import Digger from '../../newSrc/map/Digger'
 import RNG from '../../newSrc/rng'
+import range from '../../newSrc/utils/range'
 
 class Game {
   constructor() {
@@ -28,11 +29,11 @@ class Game {
   }
 
   _generateBoxes(freeCells) {
-    for (let i = 0; i < 10; i++) {
+    range(10).forEach(i => {
       const index = Math.floor(RNG.getUniform() * freeCells.length)
       const key = freeCells.splice(index, 1)[0]
       this.map[key] = '*'
-    }
+    })
   }
 }
 
