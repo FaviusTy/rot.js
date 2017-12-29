@@ -1,4 +1,6 @@
 import Display from '../../newSrc/display/Display'
+import Engine from '../../newSrc/Engine'
+import Scheduler from '../../newSrc/scheduler/SimpleScheduler'
 import Digger from '../../newSrc/map/Digger'
 import RNG from '../../newSrc/rng'
 import range from '../../newSrc/utils/range'
@@ -27,6 +29,10 @@ class Game {
     this._generateBoxes()
     this._drawWholeMap()
     this._createPlayer()
+    const scheduler = new Scheduler()
+    scheduler.add(this.player, true)
+    this.engine = new Engine(scheduler)
+    this.engine.start()
   }
 
   _generateMap() {
