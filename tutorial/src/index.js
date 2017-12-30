@@ -1,3 +1,5 @@
+import DIRS from '../../newSrc/constants/DIRS'
+import KEYSET from '../../newSrc/constants/KEYSET'
 import Display from '../../newSrc/display/Display'
 import Engine from '../../newSrc/Engine'
 import Scheduler from '../../newSrc/scheduler/SimpleScheduler'
@@ -6,15 +8,48 @@ import RNG from '../../newSrc/rng'
 import range from '../../newSrc/utils/range'
 
 class Player {
-  constructor(x = 0, y = 0, display) {
+  constructor(x = 0, y = 0, game) {
     this.x = x
     this.y = y
-    this._display = display
+    this._game = game
+    this.KEY_MAP = {
+      [KEYSET.VK_UP]: 0,
+      [KEYSET.VK_PAGE_UP]: 1,
+      [KEYSET.VK_RIGHT]: 2,
+      [KEYSET.VK_PAGE_DOWN]: 3,
+      [KEYSET.VK_DOWN]: 4,
+      [KEYSET.VK_END]: 5,
+      [KEYSET.VK_LEFT]: 6,
+      [KEYSET.VK_HOME]: 7,
+    }
     this._draw()
   }
 
   _draw() {
-    this._display.draw(this.x, this.y, '@', '#ff0')
+    this._game.display.draw(this.x, this.y, '@', '#ff0')
+  }
+
+  act() {
+    this._game.engine.lock()
+    window.addEventListener('keydown', this)
+  }
+
+  handleEvent(e) {
+    const code = e.keyCode
+    if (!Object.keys(this.KEY_MAP).includes(`${code}`)) return
+    console.log('includes')
+
+    const [diffX, diffY] = DIRS[8][this.KEY_MAP[code]]
+    const newX = this.x + diffX
+    const newY = this.y + diffY
+    if (!Object.keys(this._game.map).includes(`${newX},${newY}`)) return
+
+    this._game.display.draw(this.x, this.y, this._game.map[`${this.x},${this.y}`])
+    this.x = newX
+    this.y = newY
+    this._draw()
+    window.removeEventListener('keydown', this)
+    this._game.engine.unlock()
   }
 }
 
@@ -49,7 +84,7 @@ class Game {
     const index = Math.floor(RNG.getUniform() * this.freeCells.length)
     const key = this.freeCells.splice(index, 1)[0]
     const [x, y] = key.split(',')
-    this.player = new Player(parseInt(x), parseInt(y), this.display)
+    this.player = new Player(parseInt(x), parseInt(y), this)
   }
 
   _drawWholeMap() {
