@@ -4,8 +4,10 @@ import Display from '../../newSrc/display/Display'
 import Engine from '../../newSrc/Engine'
 import Scheduler from '../../newSrc/scheduler/SimpleScheduler'
 import Digger from '../../newSrc/map/Digger'
+import ASter from '../../newSrc/path/AStar'
 import RNG from '../../newSrc/rng'
 import range from '../../newSrc/utils/range'
+import AStar from '../../newSrc/path/AStar'
 
 class Player {
   constructor(x = 0, y = 0, game) {
@@ -74,7 +76,24 @@ class Pedro extends Player {
     this._game.display.draw(this.x, this.y, 'P', 'red')
   }
 
-  act() {}
+  act() {
+    const { x, y } = this._game.player
+    const aster = new AStar(x, y, (x, y) => Object.keys(this._game.map).includes(`${x},${y}`), { topology: 4 })
+    const path = []
+    aster.compute(this.x, this.y, (x, y) => path.push([x, y]))
+    path.shift()
+    console.log(path)
+    if (path.length === 1) {
+      this._game.engine.lock()
+      return alert('Game over - You were captured by Pedro!')
+    }
+
+    this._game.display.draw(this.x, this.y, this._game.map[`${this.x},${this.y}`])
+    const [newX, newY] = path[0]
+    this.x = newX
+    this.y = newY
+    this._draw()
+  }
 
   handleEvent() {}
 }
