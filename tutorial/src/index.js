@@ -34,8 +34,24 @@ class Player {
     window.addEventListener('keydown', this)
   }
 
+  _checkBox() {
+    const key = `${this.x},${this.y}`
+    if (this._game.map[key] !== '*') return
+    if (this._game.ananas === key) {
+      alert('Hooray! You found an ananas and won this Game!')
+      this._game.engine.lock()
+      return window.removeEventListener('keydown', this)
+    }
+
+    alert('This box is empty :-(')
+  }
+
   handleEvent(e) {
     const code = e.keyCode
+    if (code === KEYSET.VK_SPACE || code === KEYSET.VK_ENTER) {
+      this._checkBox()
+      return
+    }
     if (!Object.keys(this.KEY_MAP).includes(`${code}`)) return
     console.log('includes')
 
@@ -53,6 +69,16 @@ class Player {
   }
 }
 
+class Pedro extends Player {
+  _draw() {
+    this._game.display.draw(this.x, this.y, 'P', 'red')
+  }
+
+  act() {}
+
+  handleEvent() {}
+}
+
 class Game {
   constructor() {
     this.display = new Display()
@@ -63,11 +89,20 @@ class Game {
     this._generateMap()
     this._generateBoxes()
     this._drawWholeMap()
-    this._createPlayer()
+    this.player = this._createBeing(Player, this.freeCells)
+    this.pedro = this._createBeing(Pedro, this.freeCells)
     const scheduler = new Scheduler()
     scheduler.add(this.player, true)
+    scheduler.add(this.pedro, true)
     this.engine = new Engine(scheduler)
     this.engine.start()
+  }
+
+  _createBeing(what, freeCells = []) {
+    const index = Math.floor(RNG.getUniform() * freeCells.length)
+    const keys = freeCells.splice(index, 1)[0]
+    const [x, y] = keys.split(',')
+    return new what(+x, +y, this)
   }
 
   _generateMap() {
@@ -78,13 +113,6 @@ class Game {
       this.freeCells.push(key)
       this.map[key] = '.'
     })
-  }
-
-  _createPlayer() {
-    const index = Math.floor(RNG.getUniform() * this.freeCells.length)
-    const key = this.freeCells.splice(index, 1)[0]
-    const [x, y] = key.split(',')
-    this.player = new Player(parseInt(x), parseInt(y), this)
   }
 
   _drawWholeMap() {
@@ -99,6 +127,7 @@ class Game {
       const index = Math.floor(RNG.getUniform() * this.freeCells.length)
       const key = this.freeCells.splice(index, 1)[0]
       this.map[key] = '*'
+      if (i === 0) this.ananas = key
     })
   }
 }
