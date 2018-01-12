@@ -28,11 +28,8 @@
     "test": "tests"
   },
   "eater": {
-    "dir": "newSrc/test",
-    "require": [
-      "@std/esm",
-      "./enable-power-assert"
-    ],
+    "glob": "newSrc/**/test/*.js",
+    "require": ["@std/esm", "./enable-power-assert"],
     "reporter": "eater-b-reporter"
   },
   "homepage": "https://github.com/FaviusTy/rot.js#readme",
