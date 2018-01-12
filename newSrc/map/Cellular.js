@@ -1,3 +1,5 @@
+import range from '../utils/range'
+import zip from '../utils/zip'
 import DIRS from '../constants/DIRS'
 import RNG from '../rng'
 import Map from './Map'
@@ -34,11 +36,10 @@ export default class Cellular extends Map {
    * @param {float} probability Probability for a cell to become alive; 0 = all empty, 1 = all full
    */
   randomize(probability) {
-    for (var i = 0; i < this._width; i++) {
-      for (var j = 0; j < this._height; j++) {
-        this._map[i][j] = RNG.getUniform() < probability ? 1 : 0
-      }
-    }
+    zip(range(this._width), range(this._height)).forEach(([x, y]) => {
+      this.map[x][y] = RNG.getUniform() < probability ? 1 : 0
+    })
+
     return this
   }
 
